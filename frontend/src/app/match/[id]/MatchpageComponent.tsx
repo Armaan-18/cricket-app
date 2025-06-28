@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Commentary, Match } from '../../../../types';
 import socketService from '../../utils/socket';
@@ -10,6 +9,8 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 
 export default function MatchPageClient() {
+
+  let working = 0;
   const params = useParams();
   const matchId = parseInt(params?.id as string, 10);
 
@@ -50,6 +51,7 @@ export default function MatchPageClient() {
           }
           setLoading(false);
           setError(null);
+          working = 1;
         }
       } catch (err) {
         console.error('Failed to fetch match data:', err);
@@ -112,6 +114,9 @@ export default function MatchPageClient() {
             if (currentMatch.commentary) {
               setCommentary(Array.isArray(currentMatch.commentary) ? currentMatch.commentary : []);
             }
+            setLoading(false);
+            setError(null);
+            working = 1;
           }
         });
 
@@ -120,7 +125,6 @@ export default function MatchPageClient() {
           setError('Connection error');
         });
 
-        // If socket is already connected, join the match
         if (socket.connected) {
           socketService.joinMatch(matchId);
         }
@@ -130,20 +134,18 @@ export default function MatchPageClient() {
       }
     };
 
-    // Initialize both HTTP fetch and socket connection
     fetchMatchData();
     initializeSocket();
 
-    // Set timeout to stop loading if no response
     const timeoutId = setTimeout(() => {
       if (loading) {
         console.log('Timeout reached, stopping loading');
         setLoading(false);
-        if (!match) {
+        if (working === 0) {
           setError('Unable to load match data');
         }
       }
-    }, 10000); // 10 seconds timeout
+    }, 1000);
 
     return () => {
       clearTimeout(timeoutId);
@@ -223,7 +225,7 @@ export default function MatchPageClient() {
         </div>
         <div className="connection-status">
           <span className={`status ${connected ? 'connected' : 'disconnected'}`}>
-            {connected ? '🟢 Live' : '🟡 Loaded'}
+            {connected ? '🟢 Live' : '🟡 Loading'}
           </span>
           {connected && <span className="viewers">{clientsInRoom} viewers</span>}
         </div>
@@ -253,7 +255,6 @@ export default function MatchPageClient() {
                   </div>
                   <div className="commentary-description">{item.description}</div>
                   {item.runs !== undefined && <div className="runs">Runs: {item.runs}</div>}
-                  {item.player && <div className="player">Player: {item.player}</div>}
                 </div>
               ))}
             </div>
