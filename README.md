@@ -1,8 +1,8 @@
-# 🏏 Cricket Scoring App
+# Cricket Scoring App
 
 A full-stack real-time cricket scoring application built using modern technologies like Next.js, NestJS, MongoDB, and Socket.IO.
 
-## 🚀 Tech Stack
+## Tech Stack
 
 | Layer      | Technology                  |
 |------------|-----------------------------|
@@ -13,7 +13,7 @@ A full-stack real-time cricket scoring application built using modern technologi
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 cricket-scoring-app/
 ├── backend/ # NestJS backend with MongoDB and WebSocket APIs
@@ -22,7 +22,7 @@ cricket-scoring-app/
 
 ---
 
-## ✨ Features
+## Features
 
 - Start a new cricket match
 - Assign 4-digit unique match IDs
@@ -32,19 +32,25 @@ cricket-scoring-app/
 
 ---
 
-## 🛠️ Getting Started
+##  Getting Started
 
-### 1️⃣ Clone the repository
+### Clone the repository
 
 ```bash
 git clone https://github.com/your-username/cricket-scoring-app.git
 cd cricket-scoring-app
+```
 
+### Backend Setup
+
+```bash
 cd backend
 npm install
-
 npm run start:nodemon
+```
 
+### Frontend Setup
+```bash
 cd ../frontend
 npm install
 npm run dev
